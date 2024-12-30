@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Tab - Emoti</title>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #666;
+      color: #333;
+    }
+    .check-page {
+      width: 100%; 
+      text-align: center; 
+      color: white;
+      font-family: 'Italiana', serif;
+      font-size: 6rem;
+      font-weight: light;
+    }
+    .check-message {
+      font-size: 1.5rem;
+      color: white;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="check-page">Emoti</div>
+  <div id="camera-check" class="check-message"></div>
+
+  <script>
+    // Function to check for camera availability
+    function checkCamera() {
+      navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+          const cameraDevices = devices.filter(device => device.kind === 'videoinput');
+          const messageElement = document.getElementById('camera-check');
+          
+          if (cameraDevices.length > 0) {
+            // Redirect to 'online_camera.html' if camera is available
+            window.location.href = 'coba_kamera';
+          } else {
+            // Alert the user if no camera is found
+            window.location.href = "offline_camera";
+            alert('No camera found on this device. Opening a Offline page');
+          }
+        })
+        .catch(err => {
+          console.error('Error checking devices:', err);
+        });
+    }
+
+    // Delay the camera check by 3 seconds (3000 milliseconds)
+    setTimeout(checkCamera, 1000);
+  </script>
+</body>
+</html>

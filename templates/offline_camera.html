@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .offline_title {
+      width: 100%; 
+      text-align: center; 
+      color: rgb(0, 0, 0);
+      font-family: 'Italiana', serif;
+      font-size: 5rem;
+      font-weight: light;
+      margin: 0;
+    }
+
+    .burger-menu {
+      position: absolute;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .burger-line {
+      height: 4px;
+      background-color: #6c757d;
+      border-radius: 2px;
+      transition: background-color 0.3s ease;
+    }
+
+    .burger-menu:hover .burger-line {
+      background-color: #5a6268;
+    }
+    
+    .offline_description {
+      width: 100%; 
+      text-align: center; 
+      color: rgb(0, 0, 0);
+      font-family: 'Italiana', serif;
+      font-size: 1rem;
+      font-weight: light;
+    }
+
+    .btn-emotion {
+      border-radius: 120px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-angry { background-color: #dc3545; }
+    .btn-angry:hover { background-color: #c82333; }
+
+    .btn-fear { background-color: #363737; }
+    .btn-fear:hover { background-color: #171717; }
+
+    .btn-happy { background-color: #ffc107; }
+    .btn-happy:hover { background-color: #e0a800; }
+
+    .btn-neutral { background-color: #C0C0C0; }
+    .btn-neutral:hover { background-color: #707070; }
+
+    .btn-sad { background-color: #007bff; }
+    .btn-sad:hover { background-color: #0056b3; }
+
+    .btn-lg { font-weight: 600; }
+
+    .emotion-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      height: 150px;
+      font-size: 5rem;
+      margin-bottom: 20px;
+      visibility: visible;
+    }
+
+    .emotion-preview.visible { visibility: visible; }
+  </style>
+</head>
+<body>
+  <section class="vh-100" style="background-color: #666;">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-8 col-xl-7">
+          <div class="card text-black" style="border-radius: 60px;">
+            <div class="card-body p-md-4">
+              <div class="header">
+                <h1 class="offline_title">Emoti</h1>
+                <div class="burger-menu" onclick="window.location.href = 'setting';">
+                  <div class="burger-line"></div>
+                  <div class="burger-line"></div>
+                  <div class="burger-line"></div>
+                </div>
+              </div>
+
+              <h2 class="offline_description">Please select your emotion manually</h2>
+              <div id="emotionPreview" class="emotion-preview">😊</div>
+
+              <!-- Tombol emosi -->
+              <div class="d-grid mb-3">
+                <button id="angryButton" class="btn-emotion btn-angry btn-lg text-white py-3">Angry</button>
+              </div>
+              <div class="d-grid mb-3">
+                <button id="fearButton" class="btn-emotion btn-fear btn-lg text-white py-3">Fear</button>
+              </div>
+              <div class="d-grid mb-3">
+                <button id="happyButton" class="btn-emotion btn-happy btn-lg text-white py-3">Happy</button>
+              </div>
+              <div class="d-grid mb-3">
+                <button id="neutralButton" class="btn-emotion btn-neutral btn-lg text-white py-3">Neutral</button>
+              </div>
+              <div class="d-grid mb-3">
+                <button id="sadButton" class="btn-emotion btn-sad btn-lg text-white py-3">Sad</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Hardcoded links (gunakan server jika diperlukan)
+    
+    async function redirectToEmotion(emotion) {
+      try {
+        const response = await fetch(`/get_link/${emotion}`);
+        const data = await response.json();
+        if (data.success && data.link) {
+          // Redirect ke link yang diterima
+          window.location.href = data.link;
+        } else {
+          // alert(data.message || 'Default link will be used.');
+          // Jika link kosong, gunakan default
+          const defaultLinks = {
+            'angry': "https://www.youtube.com/watch?v=i90EvEZ3axw&list=PL97kH0xIAu5n8JTmEVhxCSp8EhIrAXO8R&pp=gAQB",
+            'fear' : "https://www.youtube.com/watch?v=d5gf9dXbPi0&list=PL97kH0xIAu5k2e4Uynb1mS6E0gdSyy8Gx&pp=gAQB",
+            'happy': "https://www.youtube.com/watch?v=PEM0Vs8jf1w&list=PL97kH0xIAu5lRrHRIr-OlINoAGC3yNjs6&pp=gAQB",
+            'sad'  : "https://www.youtube.com/watch?v=_m6l5nKEGIA&list=PL97kH0xIAu5kcX185p6-u8nr6boWXLZNH&pp=gAQB",
+            'neutral': "https://www.youtube.com/watch?v=dBFp0Ext0y8&list=PL97kH0xIAu5llG7M9KG6AANgjHE5vpHv2&pp=gAQB"
+          };
+          window.location.href = defaultLinks[emotion];
+        }
+      } catch (error) {
+        // alert('Error fetching link. Using default link.');
+        // Gunakan default jika terjadi error
+        const defaultLinks = {
+          'angry': "https://www.youtube.com/watch?v=i90EvEZ3axw&list=PL97kH0xIAu5n8JTmEVhxCSp8EhIrAXO8R&pp=gAQB",
+          'fear' : "https://www.youtube.com/watch?v=d5gf9dXbPi0&list=PL97kH0xIAu5k2e4Uynb1mS6E0gdSyy8Gx&pp=gAQB",
+          'happy': "https://www.youtube.com/watch?v=PEM0Vs8jf1w&list=PL97kH0xIAu5lRrHRIr-OlINoAGC3yNjs6&pp=gAQB",
+          'sad'  : "https://www.youtube.com/watch?v=_m6l5nKEGIA&list=PL97kH0xIAu5kcX185p6-u8nr6boWXLZNH&pp=gAQB",
+          'neutral': "https://www.youtube.com/watch?v=dBFp0Ext0y8&list=PL97kH0xIAu5llG7M9KG6AANgjHE5vpHv2&pp=gAQB"
+        };
+        window.location.href = defaultLinks[emotion];
+      }
+    }
+    
+
+    const emotionPreview = document.getElementById('emotionPreview');
+
+    // Menampilkan preview emosi
+    function showEmotion(emoticon) {
+      emotionPreview.textContent = emoticon;
+      emotionPreview.classList.add('visible');
+    }
+
+    function hideEmotion() {
+      emotionPreview.classList.remove('visible');
+    }
+
+    // Event listeners tombol
+    document.getElementById('angryButton').addEventListener('mouseover', () => showEmotion('😠'));
+    document.getElementById('angryButton').addEventListener('mouseout', hideEmotion);
+    document.getElementById('angryButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      redirectToEmotion('angry');
+    });
+
+    document.getElementById('fearButton').addEventListener('mouseover', () => showEmotion('😨'));
+    document.getElementById('fearButton').addEventListener('mouseout', hideEmotion);
+    document.getElementById('fearButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      redirectToEmotion('fear');
+    });
+
+    document.getElementById('happyButton').addEventListener('mouseover', () => showEmotion('😊'));
+    document.getElementById('happyButton').addEventListener('mouseout', hideEmotion);
+    document.getElementById('happyButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      redirectToEmotion('happy');
+    });
+
+    document.getElementById('neutralButton').addEventListener('mouseover', () => showEmotion('😐'));
+    document.getElementById('neutralButton').addEventListener('mouseout', hideEmotion);
+    document.getElementById('neutralButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      redirectToEmotion('neutral');
+    });
+
+    document.getElementById('sadButton').addEventListener('mouseover', () => showEmotion('😢'));
+    document.getElementById('sadButton').addEventListener('mouseout', hideEmotion);
+    document.getElementById('sadButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      redirectToEmotion('sad');
+    });
+  </script>
+</body>
+</html>

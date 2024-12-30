@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Tab - Emoti</title>
+  <style>
+    /* Sama seperti kode awal */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      background-color: #666;
+      color: #333;
+    }
+
+    header {
+      width: 100%;
+      background-color: #f4c842;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.5rem;
+      color: black;
+      font-family: serif;
+      position: relative;
+    }
+
+    .online-camera-header-title {
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .online-camera-setting {
+      position: absolute;
+      right: 1rem;
+    }
+
+    .online-camera-settings-btn {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .online-camera-settings-btn:hover {
+      background-color: #555;
+    }
+
+    .online-camera-content {
+      background-color: white;
+      width: 100%;
+      max-width: 1280px;
+      aspect-ratio: 16 / 9;
+      margin: 1rem auto;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1rem;
+      padding-bottom: 20px;
+    }
+
+      .online-camera-camera-placeholder {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative; /* Tambahan untuk konteks positioning */
+    }
+
+    .online-camera-camera-placeholder video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .loader-container {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .online-camera-loader {
+      transform: rotate(-90deg); /* Memulai animasi dari atas */
+      width: 100px;
+      height: 100px;
+    }
+    
+    .background-circle {
+      fill: none;
+      stroke: #f3f3f3;
+      stroke-width: 11;
+    }
+    
+    .progress-circle {
+      fill: none;
+      stroke: #4280f4;
+      stroke-width: 11;
+      stroke-dasharray: 283; /* Panjang keliling lingkaran (2 * π * radius) */
+      stroke-dashoffset: 283; /* Awalnya lingkaran tidak terlihat */
+      animation: progress 15s linear forwards;
+    }
+    
+    @keyframes progress {
+      to {
+        stroke-dashoffset: 0; /* Lingkaran penuh */
+      }
+    }
+
+    .online-camera-reset-button {
+      background-color: #f4c842;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 4px;
+      margin: 20px auto 0;
+      display: block;
+    }
+
+    .online-camera-reset-button:hover {
+      background-color: #e3b837;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="online-camera-header-title">Emoti</div>
+  <div class="online-camera-setting">
+    <button class="online-camera-settings-btn" onclick="window.location.href = 'setting';";>Settings</button>
+  </div>
+</header>
+
+<div class="online-camera-content">
+  <h2>Welcome to Online Mode</h2>
+  <p>Ensure your camera is connected to enjoy full features.</p>
+  <div class="online-camera-camera-placeholder">
+    <video autoplay="true" id="videoElement"></video>
+  </div>
+  <div id="emotionResult"></div>
+  <div class="loader-container">
+    <svg class="online-camera-loader" viewBox="0 0 100 100">
+      <circle class="background-circle" cx="50" cy="50" r="45" />
+      <circle class="progress-circle" cx="50" cy="50" r="45" />
+    </svg>
+  </div>
+  <button class="online-camera-reset-button" onclick="resetCamera()">Reset Camera</button>
+</div>
+
+<script>
+  let video = document.querySelector("#videoElement");
+  let emotionResult = document.getElementById('emotionResult');
+  let captureInterval;
+  let stream;
+
+  // Initialize webcam
+  if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function (stream) {
+        video.srcObject = stream;
+        captureInterval = setInterval(captureImage, 500);
+      })
+      .catch(function (error) {
+        console.log("Camera access denied or error:", error);
+      });
+  } else {
+    console.log("getUserMedia not supported");
+  }
+
+  // Capture image and send to server
+  function captureImage() {
+    let canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    let context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    let dataURL = canvas.toDataURL('image/jpeg');
+
+    fetch('/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ image: dataURL })
+    })
+    .then(response => response.json())
+    .then(data => {
+      emotionResult.innerHTML = `Detected Emotion: ${data.emotion}`;
+      if (data.done) {
+        window.location(data.youtube_link, "_blank");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  // Reset camera function
+  function resetCamera() {
+    clearInterval(captureInterval);
+    if (stream) {
+      let tracks = stream.getTracks();
+      tracks.forEach(track => track.stop()); // Stop all media tracks
+    }
+
+    fetch('/reset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.reset) {
+        emotionResult.innerHTML = ""; // Clear UI
+        alert("Camera reset successfully. Restarting...");
+        window.location.reload(); // Reload page after reset
+      }
+    })
+    .catch(error => {
+      console.error("Error during reset:", error);
+    });
+}
+</script>
+
+</body>
+</html>

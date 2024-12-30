@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Tab - Emoti</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      background-color: #666;
+      color: #333;
+    }
+
+    header {
+      width: 100%;
+      background-color: #f4c842;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.5rem;
+      color: black;
+      font-family: serif;
+      position: relative;
+    }
+
+    .online-camera-header-title {
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .online-camera-setting {
+      position: absolute;
+      right: 1rem;
+    }
+
+    .online-camera-settings-btn {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .online-camera-settings-btn:hover {
+      background-color: #555;
+    }
+
+    .online-camera-content {
+      background-color: white;
+      width: 100%;
+      max-width: 1280px;
+      aspect-ratio: 16 / 9;
+      margin: 1rem auto;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1rem;
+      padding-bottom: 20px;
+    }
+
+    .online-camera-camera-placeholder {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .online-camera-loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #4280f4;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 2s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    .online-camera-reset-button {
+      background-color: #f4c842;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 4px;
+      margin: 20px auto 0;
+      display: block;
+    }
+
+    .online-camera-reset-button:hover {
+      background-color: #e3b837;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="online-camera-header-title">Emoti</div>
+  <div class="online-camera-setting">
+    <button class="online-camera-settings-btn" onclick="window.location.href = 'setting.html';";>Settings</button>
+  </div>
+</header>
+
+<div class="online-camera-content">
+  <h2>Welcome to Online Mode</h2>
+  <p>Ensure your camera is connected to enjoy full features.</p>
+  <div class="online-camera-camera-placeholder">
+    <p>Camera View</p>
+  </div>
+  <div class="online-camera-loader"></div>
+  <button class="online-camera-reset-button" onclick="alert('Resetting Camera...')">Reset Camera</button>
+</div>
+
+</body>
+</html>
