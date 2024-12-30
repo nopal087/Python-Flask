@@ -90,7 +90,6 @@ def update_links():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
 
-
 # ----------------------------
 
 @app.route('/predict', methods=['POST'])
@@ -137,4 +136,3 @@ def reset():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
-
